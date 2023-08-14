@@ -56,7 +56,13 @@ If `VISION_PROJECT_NAME` is provided and resolves to a current project, the scri
 
 ## Steps
 
-The `deploy.sh` script contains the steps to setup, train, and deploy the Custom Vision model to the AzureML endpoint. The steps are as follows:
+The `deploy.sh` script contains the steps to setup, train, and deploy the Custom Vision model to the AzureML endpoint. It can be run using the following command:
+
+```bash
+./deploy.sh
+```
+
+During execution the script will:
 
 1. Create Custom Vision project, train model, and publish iteration
 2. Export model as ONNX
