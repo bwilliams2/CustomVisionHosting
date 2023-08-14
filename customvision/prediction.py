@@ -11,7 +11,7 @@ from azure.cognitiveservices.vision.customvision.prediction import (
 from msrest.authentication import ApiKeyCredentials
 
 load_dotenv("../.env")
-publish_iteration_name = os.environ["VISION_ITERATION_ID"]
+publish_iteration_name = os.environ["VISION_PUBLISH_ITERATION_NAME"]
 base_image_location = os.path.join(os.path.dirname(__file__), "data")
 
 ENDPOINT = os.environ["VISION_TRAINING_ENDPOINT"]

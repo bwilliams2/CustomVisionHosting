@@ -37,8 +37,7 @@ class TritonObjectDetection(ObjectDetection):
         image = image.resize((new_width, new_height))
         return image
 
-    def predict_image(self, image, model_name, scoring_uri, aml_token, model_version="1"):
-
+    def predict_image(self, image, model_name, scoring_uri, aml_token, model_version="1", verbose=False):
         url = scoring_uri[8:]
         with httpclient.InferenceServerClient(
             url=url,
@@ -49,11 +48,13 @@ class TritonObjectDetection(ObjectDetection):
             headers["Authorization"] = f"Bearer {aml_token}"
 
             health_ctx = client.is_server_ready(headers=headers)
-            print("Is server ready -{}".format(health_ctx))
+            if verbose:
+                print("Is server ready -{}".format(health_ctx))
         
             # Check status of model
             status_ctx = client.is_model_ready(model_name, model_version, headers)
-            print("Is model ready - {}".format(status_ctx))
+            if verbose:
+                print("Is model ready - {}".format(status_ctx))
 
             metadata=client.get_model_metadata(model_name, "1", headers=headers)
             dtype = metadata["inputs"][0]["datatype"]
@@ -79,14 +80,14 @@ class TritonObjectDetection(ObjectDetection):
 @click.option("--token", help="token for authorization")
 @click.option("--image_filename", help="image")
 @click.option("--model_name", help="model name")
-@click.option("--labels", help="model name")
-def main(base_url, token, image_filename, model_name, labels): 
+@click.option("--labels", help="labels file location")
+@click.option("--verbose", help="verbose", default=False)
+def main(base_url, token, image_filename, model_name, labels, verbose): 
     triton = TritonObjectDetection(labels)
-    outputs = triton.predict_image(image_filename, model_name, base_url, token)
-    print(outputs)
-
+    outputs = triton.predict_image(image_filename, model_name, base_url, token, verbose=verbose)
+    if verbose:
+        print(outputs)
 
 if __name__ == "__main__":
     main()
-    print("finished running")
     

@@ -2,7 +2,7 @@
 
 set -e
 
-pip install gevent requests pillow tritonclient[all] azure-cognitiveservices-vision-customvision python-dotenv click onnx
+pip install gevent requests pillow tritonclient[all] azure-cognitiveservices-vision-customvision python-dotenv click onnx numpy
 
 # <set_variables>
 export $(grep -v '^#' .env | xargs)
@@ -82,6 +82,9 @@ AUTH_TOKEN=$(az ml online-endpoint get-credentials -n $ENDPOINT_NAME --query acc
 # <test_online_endpoint>
 python $BASE_PATH/scoring/triton_scoring.py --base_url $SCORING_URL --token $AUTH_TOKEN --image_filename ./data/test/test_image.jpg --model_name $MODEL_NAME --labels $BASE_PATH/scoring/labels.txt
 # </test_online_endpoint>
+
+# Command below will compare performance of Triton server on AzureML to that of Azure Custom Vision predictions
+# python $BASE_PATH/scoring/scoring_evaluation.py --base_url $SCORING_URL --token $AUTH_TOKEN --image_filename ./data/test/test_image.jpg --model_name $MODEL_NAME --labels $BASE_PATH/scoring/labels.txt
 
 # <delete_online_endpoint>
 # az ml online-endpoint delete -y -n $ENDPOINT_NAME
